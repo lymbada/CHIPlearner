@@ -1,0 +1,33 @@
+---
+- hosts: chip
+  tasks:
+
+   - name: Make sure we have a 'wheel' group
+     group:
+       name: wheel
+       state: present
+     become: yes
+     become_method: "sudo"
+
+   - name: Add sudoers users to wheel group
+     become: yes
+     become_method: "sudo"
+     user: name=chip groups=wheel append=yes state=present createhome=yes
+
+   - name: Add ansible user, add it to sudo
+     user: name=ansible
+           state=present
+           createhome=no
+           groups=wheel
+     become: yes
+     become_method: "sudo"
+
+   - name: Allow 'wheel' group to have passwordless sudo
+     become: yes
+     become_method: "sudo"
+     lineinfile:
+       dest: /etc/sudoers
+       state: present
+       regexp: '^%wheel'
+       line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+

@@ -1,0 +1,14 @@
+---
+- hosts: chip
+  tasks:
+    - name: install basic packages
+      become: yes
+      become_method: "sudo"
+      action: >
+        {{ ansible_pkg_mgr }} name={{ item }} state=present update_cache=yes
+      with_items:
+        - nano
+        - htop
+        - avahi-daemon
+        - less
+        - apt-transport-https

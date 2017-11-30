@@ -1,0 +1,5 @@
+---
+- hosts: chip
+  tasks:
+    - name: install & configure docker
+      apt: name=docker-engine state=present
