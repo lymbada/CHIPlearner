@@ -1,0 +1,15 @@
+spec: "0.1"
+name: rocket-buttons
+uuid: e0a7807f-ef0f-4dfb-80e5-4f59734df7af
+type: docker
+onboot:
+services: []
+- name: rocket-buttons
+  uuid: 557b63ec-8c6b-4020-9da6-53649f5667f6
+  image: ""
+  directory: "./"
+  net: "host"
+  readonly: false
+  binds: ['/sys:/sys']
+  capabilities: ['SYS_RAWIO']
+  devices: ['/dev/mem']
