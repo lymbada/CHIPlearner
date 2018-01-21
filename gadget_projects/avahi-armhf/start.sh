@@ -22,7 +22,7 @@ exit_script(){
 	exit 0
 }
 
-trap exit_script 0 2 3 15 SIGINT SIGTERM
+trap exit_script 2 15 SIGINT SIGTERM
 /usr/sbin/avahi-daemon --daemonize
 echo "avahi-daemon started with code:$?"
 

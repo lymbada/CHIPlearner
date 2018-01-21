@@ -36,9 +36,9 @@ class GPIO_controll:
     def set_speed(self, new_speed):
         if new_speed > 100:
             new_speed = 100
-        elif new_speed > 0 and new_speed < 40 and self.speed == 0:
-            new_speed = 40
-        elif new_speed < 40:
+        elif new_speed > 0 and new_speed < 30 and self.speed == 0:
+            new_speed = 30
+        elif new_speed < 30:
             new_speed = 0
         self.speed = new_speed
         print "speed set to" + str(100-self.speed)
@@ -78,7 +78,7 @@ def sigterm_handler(signal, frame):
 signal.signal(signal.SIGTERM, sigterm_handler)
 
 def setspeed(speed):
-    if speed < 40:
+    if speed < 30:
         speed = 0
     if speed > 100:
         app.logger.warning('warning: tried to set speed grater than 100%')

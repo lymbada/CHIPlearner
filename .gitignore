@@ -1,3 +1,5 @@
 
 gadget_projects/.DS_Store
 .DS_Store
+*.DS_Store
+gadget_projects/rocket/avahi-bonjour.tar
