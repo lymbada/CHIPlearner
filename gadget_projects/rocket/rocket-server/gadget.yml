@@ -1,0 +1,15 @@
+spec: "0.1"
+name: rocket-server
+uuid: eb96abec-239f-4f4a-8122-eda9b6faf170
+type: docker
+onboot:
+services:
+- name: rocket-server
+  uuid: bde2fe73-fcf0-458e-b3d8-013e2a0a6fe0
+  image: ""
+  directory: "./"
+  net: "host"
+  readonly: false
+  binds: ['/sys:/sys']
+  capabilities: ['SYS_RAWIO']
+  devices: ['/dev/mem']

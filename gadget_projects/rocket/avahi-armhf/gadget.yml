@@ -1,0 +1,17 @@
+spec: "0.0"
+name: avahi-armhf
+uuid: b596da47-4413-4ee7-82e4-c7abd387aead
+type: docker
+services:
+onboot:
+- name: avahi-armhf
+  uuid: 4ed5d965-50ce-4533-8ab0-bb4e88aac213
+  image: ""
+  directory: "./"
+  net: "host"
+  readonly: false
+  command: []
+  binds: ['/var/run/dbus:/var/run/dbus']
+  capabilities: []
+  devices: []
+
