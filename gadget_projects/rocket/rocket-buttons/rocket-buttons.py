@@ -1,4 +1,4 @@
-        print "LED turned off & Threads should be stopped"
+#!/bin/perl
 # This I hope to form a quick basis for my simple Python projects to us a geneic API
 # We have yet to see what use it will actually be
 
@@ -18,12 +18,15 @@ import CHIP_IO.GPIO as GPIO
 import json
 import sys
 import signal
+import os
+import requests
 
 # assign the buttons as CSID values
 up = "CSID0" #speed goes up
 down = "CSID1" #speed goes down
 stop = "CSID2"	#stop the loop
 flasher = "CSID7" #'indicator' led to show userfeed-back
+serverAddress = "192.168.0.114"
 threads=[]
 
 
@@ -64,14 +67,14 @@ def sigterm_handler(signal, frame):
 
 
 def buttonPress(buttonObject,buttonID):
-    while buttonObject.keepRunning:
-    	if GPIO.input(buttonID):
-    		buttonObject.button[buttonID] = True
-    		sleep(buttonObject.pressTime)
-    		#print buttonObject.button
-    	else:
-    		buttonObject.button[buttonID] = False
-    	sleep(0.1) # let another thread take over for a moment
+	while buttonObject.keepRunning:
+		if GPIO.input(buttonID):
+			buttonObject.button[buttonID] = True
+			sleep(buttonObject.pressTime)
+			#print buttonObject.button
+		else:
+			buttonObject.button[buttonID] = False
+		sleep(0.1) # let another thread take over for a moment
 
 def flashLED(flashCount):
 	for x in range(flashCount):
@@ -86,28 +89,38 @@ def mainControl(buttonObject):
 			print "Speeding up"
 			threads.append(thread.start_new_thread(flashLED, (1,)))
 			buttonObject.button[up] = False
+			r = requests.get("http://" + serverAddress + ":5000/api/v1/rocket/speedup")
+			r = requests.get("http://" + serverAddress + ":5000/api/v1/rocket/ledon")
 		elif buttonObject.button[down]:
 			print "Slowing down"
 			threads.append(thread.start_new_thread(flashLED, (2,)))
 			buttonObject.button[down] = False
+			r = requests.get("http://" + serverAddress + ":5000/api/v1/rocket/speeddown")
 		elif buttonObject.button[stop]:
 			print "Stopping"
 			threads.append(thread.start_new_thread(flashLED, (3,)))
 			buttonObject.button[stop] = False
+			r = requests.get("http://" + serverAddress + ":5000/api/v1/rocket/stop")
+			r = requests.get("http://" + serverAddress + ":5000/api/v1/rocket/ledoff")
 		sleep(0.01)
 
 
 signal.signal(signal.SIGTERM, sigterm_handler)
+#serverAddress = os.getenv('SERVER')
 if __name__ == "__main__":
 	buttonObject = button([up,down,stop],0.5)
 	if thread._count() == 0:
-		threads.append(thread.start_new_thread(mainControl, (buttonObject,)))
-		threads.append(thread.start_new_thread(buttonPress, (buttonObject,up)))
-		threads.append(thread.start_new_thread(buttonPress, (buttonObject,down)))
-		threads.append(thread.start_new_thread(buttonPress, (buttonObject,stop)))
+		try:
+			threads.append(thread.start_new_thread(mainControl, (buttonObject,)))
+			#thread.start_new_thread(mainControl, (buttonObject,))
+			threads.append(thread.start_new_thread(buttonPress, (buttonObject,up)))
+			threads.append(thread.start_new_thread(buttonPress, (buttonObject,down)))
+			threads.append(thread.start_new_thread(buttonPress, (buttonObject,stop)))
+			while buttonObject.keepRunning or thread._count() > 0:
+				sleep(1)
+				#print "running"
+		except Exception as e:
+			print "There was an error turning off: " + str(e)
 	else:
 		print "ERROR: there seems to be some threads already running"
-
-
-
 

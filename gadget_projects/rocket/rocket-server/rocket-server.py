@@ -148,7 +148,7 @@ def api_rocket_speeddown_get():
         #return 'speed was increased by '+ str(request.args['value'])
     else:
         speed_change(-10)
-        return 'speed was decreased by 10'
+        return 'speed was decreased by 10, currently:' + str(all_vars.get_speed())
 
 @app.route(rocket_base_url + "/speedup", methods = ['GET'])
 def api_rocket_speedup_get():
@@ -157,7 +157,7 @@ def api_rocket_speedup_get():
         return 'speed was increased by ' + str(request.args['value'])
     else:
         speed_change(10)
-        return 'speed was increased by 10'
+        return 'speed was increased by 10, currently:' + str(all_vars.get_speed())
 
 @app.route(rocket_base_url + "/stop", methods = ['GET'])
 def api_rocket_stop_get():

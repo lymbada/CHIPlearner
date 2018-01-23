@@ -46,11 +46,10 @@ RUN apk update && apk add bison \
 				#py-setuptools \
 				#py-pip
 
-
 # Set and create a working directory called app
 WORKDIR /app
 
-RUN touch here
+RUN export SERVER="192.168.0.114"
 
 # Copy the contents of the current directory into the working directory
 ADD . /app				
